@@ -78,7 +78,9 @@ var log = require('./lib/log.js')('server.js');
         }
       },
       close: function(cb) {
-        cb();
+        if (cb!= null) {
+          cb();
+        }
       }
     }
   );
