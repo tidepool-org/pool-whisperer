@@ -37,11 +37,11 @@ var log = require('./lib/log.js')('server.js');
 
   var userApiClient = require('user-api-client').client(
     config.userApi,
-    lifecycle.add('user-api-watch', hakken.randomWatch(config.userApi.serviceName))
+    lifecycle.add('user-api-watch', hakken.watchFromConfig(config.userApi.serviceSpec))
   );
 
   var seagullClient = require('tidepool-seagull-client')(
-    lifecycle.add('seagull-watch', hakken.randomWatch(config.seagull.serviceName))
+    lifecycle.add('seagull-watch', hakken.watchFromConfig(config.seagull.serviceSpec))
   );
 
   var dataBroker = require('./lib/dataBroker.js')(config);
