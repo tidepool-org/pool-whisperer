@@ -1,6 +1,6 @@
 {
   "name": "pool-whisperer",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "API for accessing data.",
   "main": "lib/index.js",
   "directories": {
