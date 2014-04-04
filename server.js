@@ -44,10 +44,16 @@ var log = require('./lib/log.js')('server.js');
     lifecycle.add('seagull-watch', hakken.watchFromConfig(config.seagull.serviceSpec))
   );
 
+  var armadaClient = require('tidepool-armada-client')(
+    lifecycle.add('armada-watch', hakken.watchFromConfig(config.armada.serviceSpec))
+  );
+
   var dataBroker = require('./lib/dataBroker.js')(config);
   lifecycle.add('dataBroker', dataBroker);
 
-  var poolWhisperer = require('./lib/poolWhisperer.js')(userApiClient, seagullClient, dataBroker);
+  var serverPlatformClient = require('tidepool-gatekeeper').authorizationClient(userApiClient, seagullClient, armadaClient);
+
+  var poolWhisperer = require('./lib/poolWhisperer.js')(userApiClient, seagullClient, serverPlatformClient, dataBroker);
 
   if (config.httpPort != null) {
     poolWhisperer.withHttp(config.httpPort);

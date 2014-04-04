@@ -73,6 +73,10 @@ module.exports = (function() {
     serviceSpec: JSON.parse(config.fromEnvironment("SEAGULL_SERVICE"))
   };
 
+  env.armada = {
+    // The config object to discover armada.  This is just passed through to hakken.watchFromConfig()
+    serviceSpec: JSON.parse(config.fromEnvironment("ARMADA_SERVICE"))
+  };
 
   env.discovery = {
     // The host to connect to for discovery
