@@ -24,8 +24,8 @@
     "restify": "2.6.0",
     "request": "2.33.0",
     "rx": "2.2.13",
-    "tidepool-armada-client": "0.0.1",
-    "tidepool-gatekeeper": "0.0.1",
+    "tidepool-armada-client": "0.0.2",
+    "tidepool-gatekeeper": "0.0.2",
     "tidepool-seagull-client": "0.0.2",
     "user-api-client": "0.1.5"
   },
