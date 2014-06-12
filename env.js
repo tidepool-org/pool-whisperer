@@ -73,9 +73,9 @@ module.exports = (function() {
     serviceSpec: JSON.parse(config.fromEnvironment("SEAGULL_SERVICE"))
   };
 
-  env.armada = {
+  env.gatekeeper = {
     // The config object to discover armada.  This is just passed through to hakken.watchFromConfig()
-    serviceSpec: JSON.parse(config.fromEnvironment("ARMADA_SERVICE"))
+    serviceSpec: JSON.parse(config.fromEnvironment("GATEKEEPER_SERVICE"))
   };
 
   env.discovery = {

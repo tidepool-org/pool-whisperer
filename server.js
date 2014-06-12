@@ -25,15 +25,18 @@
  */
 
 var _ = require('lodash');
+var amoeba = require('amoeba');
+var gatekeeper = require('tidepool-gatekeeper');
 
 var log = require('./lib/log.js')('server.js');
 
 (function () {
   var config = require('./env.js');
-  var lifecycle = require('amoeba').lifecycle();
+  var lifecycle = amoeba.lifecycle();
   var hakken = require('hakken')(config.discovery).client();
-
   lifecycle.add('hakken', hakken);
+
+  var httpClient = amoeba.httpClient();
 
   var userApiClient = require('user-api-client').client(
     config.userApi,
@@ -41,19 +44,20 @@ var log = require('./lib/log.js')('server.js');
   );
 
   var seagullClient = require('tidepool-seagull-client')(
-    lifecycle.add('seagull-watch', hakken.watchFromConfig(config.seagull.serviceSpec))
+    lifecycle.add('seagull-watch', hakken.watchFromConfig(config.seagull.serviceSpec)), {}, httpClient
   );
 
-  var armadaClient = require('tidepool-armada-client')(
-    lifecycle.add('armada-watch', hakken.watchFromConfig(config.armada.serviceSpec))
+  var dataBroker = lifecycle.add('dataBroker', require('./lib/dataBroker.js')(config));
+
+  var accessClient = gatekeeper.authorizationClient(
+    gatekeeper.client(
+      httpClient,
+      userApiClient.withServerToken.bind(userApiClient),
+      lifecycle.add('gatekeeper-watch', hakken.watchFromConfig(config.gatekeeper.serviceSpec))
+    )
   );
 
-  var dataBroker = require('./lib/dataBroker.js')(config);
-  lifecycle.add('dataBroker', dataBroker);
-
-  var serverPlatformClient = require('tidepool-gatekeeper').authorizationClient(userApiClient, seagullClient, armadaClient);
-
-  var poolWhisperer = require('./lib/poolWhisperer.js')(userApiClient, seagullClient, serverPlatformClient, dataBroker);
+  var poolWhisperer = require('./lib/poolWhisperer.js')(userApiClient, seagullClient, accessClient, dataBroker);
 
   if (config.httpPort != null) {
     poolWhisperer.withHttp(config.httpPort);
