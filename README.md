@@ -1,4 +1,3 @@
-pool-whisperer
-==============
+## DEPRECATED 
 
-Data Access API Service thingie, it knows how to talk to the pools
+refer to [tide-whisperer](https://github.com/tidepool-org/tide-whisperer) for the data access API used by blip
